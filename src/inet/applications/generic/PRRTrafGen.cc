@@ -52,12 +52,15 @@ void PRRTrafGen::initialize(int stage)
         coolDownDuration = par("coolDownDuration");
         continueSendingDummyPackets = par("continueSendingDummyPackets");
 
+        mayEndSimulation = par("mayEndSimulation");
+
         // subscribe to sink signal
         std::string signalName = extractHostName(this->getFullPath());
         getSimulation()->getSystemModule()->subscribe(signalName.c_str(), this);
+
+        shutdownTimer = new cMessage("shutdownTimer");
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
-        shutdownTimer = new cMessage("shutdownTimer");
     }
 }
 
@@ -90,7 +93,8 @@ bool PRRTrafGen::isEnabled()
 void PRRTrafGen::handleMessage(cMessage *msg)
 {
     if(msg == shutdownTimer) {
-        endSimulation();
+        if (mayEndSimulation)
+            endSimulation();
     }
     else {
         IPvXTrafGen::handleMessage(msg);
@@ -151,7 +155,10 @@ std::string PRRTrafGen::extractHostName(const std::string& sourceName) {
 void PRRTrafGen::processPacket(cPacket *msg)
 {
     // Throw away dummy packets
-    if(msg->par("dummy")) {
+    int dummyIdx = msg->getParList().find("dummy");
+
+    if(dummyIdx != -1 && msg->par("dummy")) {
+        EV_INFO << "No DUMMY parameter found in packet!";
         delete msg;
         return;
     }

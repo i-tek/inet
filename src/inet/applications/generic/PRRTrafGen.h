@@ -42,6 +42,7 @@ class INET_API PRRTrafGen : public IPvXTrafGen, public cIListener
     static int initializedCount;
     static int finishedCount;
     bool finished = false;
+    bool mayEndSimulation = true;
 
     simtime_t warmUpDuration;
     simtime_t coolDownDuration;

@@ -63,9 +63,10 @@ void IPvXTrafGen::initialize(int stage)
         numReceived = 0;
         WATCH(numSent);
         WATCH(numReceived);
+
+        timer = new cMessage("sendTimer");
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
-        timer = new cMessage("sendTimer");
         nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
         registerProtocol(*ProtocolGroup::ipprotocol.getProtocol(protocol), gate("ipOut"));

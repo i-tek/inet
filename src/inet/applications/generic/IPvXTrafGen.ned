@@ -18,6 +18,7 @@
 
 
 package inet.applications.generic;
+import inet.applications.contract.IIPApp;
 
 //
 // Sends IP or IPv6 datagrams to the given address at the given sendInterval.
@@ -31,7 +32,7 @@ package inet.applications.generic;
 // The peer can be ~IPvXTrafSink or another ~IPvXTrafGen (it handles received packets
 // exactly like ~IPvXTrafSink).
 //
-simple IPvXTrafGen like IIPvXTrafficGenerator
+simple IPvXTrafGen like IIPApp
 {
     parameters:
         double startTime @unit("s") = default(1s); // time of sending the first packet

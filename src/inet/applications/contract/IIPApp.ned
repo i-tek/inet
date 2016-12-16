@@ -16,20 +16,18 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
-package inet.applications.generic;
+package inet.applications.contract;
 
 //
-// Prototype for modules that generate traffic directly over IP.
+// Prototype for modules that directly attach to IP.
+// It can be considered as Raw IP interface.
 // Compatible with both ~IPv4 and ~IPv6.
 //
-// @see ~IPvXTrafGen, ~IPvXTrafSink
-//
-moduleinterface IIPvXTrafficGenerator
+moduleinterface IIPApp
 {
     @display("i=block/app");
+
     gates:
         input ipIn @labels(IPv4ControlInfo/up,IPv6ControlInfo/up);
         output ipOut @labels(IPv4ControlInfo/down,IPv6ControlInfo/down);
 }
-

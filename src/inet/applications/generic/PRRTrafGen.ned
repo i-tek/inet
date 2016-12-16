@@ -31,6 +31,7 @@ simple PRRTrafGen extends IPvXTrafGen
         double warmUpDuration @unit("s") = default(10s);
         double coolDownDuration @unit("s") = default(10s);
         bool continueSendingDummyPackets = default(true);
+        bool mayEndSimulation = default(true);
         
         @signal[sinkRcvdPk](type=cPacket);
         @signal[sentDummyPk](type=cPacket);

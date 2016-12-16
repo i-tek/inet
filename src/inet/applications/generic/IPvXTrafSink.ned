@@ -18,12 +18,13 @@
 
 
 package inet.applications.generic;
+import inet.applications.contract.IIPApp;
 
 //
 // Consumes and prints packets received from the IP module.
 // Compatible with both ~IPv4 and ~IPv6.
 //
-simple IPvXTrafSink like IIPvXTrafficGenerator
+simple IPvXTrafSink like IIPApp
 {
     parameters:
         int protocol; // value for ~IPv4ControlInfo / ~IPv6ControlInfo protocol field
