@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2016 Florian Kauer <florian.meier@koalo.de>
+// Copyright (C) 2016 Jonas K. <i-tek@web.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -17,10 +18,12 @@
 
 package inet.examples.ieee802154;
 
-import inet.applications.generic.PRRTrafGen;
+
 import inet.node.inet.WirelessHost;
 import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
 import inet.routing.gpsr.GPSR;
+
+import inet.applications.contract.IIPApp;
 
 //
 // A wireless host containing an Ieee802154NarrowbandNic,
@@ -29,6 +32,7 @@ import inet.routing.gpsr.GPSR;
 module IEEE802154ExampleHost extends WirelessHost
 {
     parameters:
+        int numIpApps = default(0);
         hasIpv4 = false;
         hasGn = true;
         networkLayerType = "GenericNetworkLayer";
@@ -36,9 +40,6 @@ module IEEE802154ExampleHost extends WirelessHost
 
         wlan[0].typename = default("WirelessNic");
         wlan[0].radioType = default("Ieee802154NarrowbandScalarRadio");
-
-        trafficgen.protocol = 17;
-        trafficgen.packetLength = default(10B);
 
         @display("i=device/accesspoint;bgb=,-");
 
@@ -48,17 +49,24 @@ module IEEE802154ExampleHost extends WirelessHost
         *.gnp.procDelay = default(2ms);
 
     submodules:
-        trafficgen: PRRTrafGen {
-            @display("p=188,287");
+
+        // IPLevel Apps
+        ipApp[numIpApps]: <> like IIPApp {
+            parameters:
+                @display("p=300,300,row,100");
         }
 
+	//Routing protocol
         gpsr: GPSR {
             @display("p=739,339");
         }
 
     connections:
-        trafficgen.ipOut --> tn.upperLayerIn++;
-        trafficgen.ipIn <-- tn.upperLayerOut++;
+
+        for i=0..numIpApps-1 {
+            ipApp[i].ipOut --> tn.upperLayerIn++;
+            ipApp[i].ipIn <-- tn.upperLayerOut++;
+        }
 
         gpsr.ipOut --> tn.upperLayerIn++;
         gpsr.ipIn <-- tn.upperLayerOut++;
